@@ -63,7 +63,14 @@ App = (function () {
     }
     
     function addMarkers(markers) {
-        var mapMarker, marker, icon;
+        var counts = {},
+            mapMarker, marker, icon, sectorName, sectorSpan;
+        sectorName = document.getElementsByName('sector');
+        
+        
+        for (var i = 0, len = sectorName.length; i < len; i++) {
+            counts[sectorName[i].value] = 0;
+        }
          
         for (var i = 0, len = markers.length; i < len; i++) {
             
@@ -79,10 +86,18 @@ App = (function () {
             
             activeMarkers.push(mapMarker);
             
+            
+            counts[marker.sector] = counts[marker.sector]+ 1;
+            //console.log(counts);
             mapMarker._data = marker;
             
             GEvent.addListener(mapMarker, 'click', onMarkerClick);
         }
+        var countTxt = 'Count'
+        for (var i = 0, len = sectorName.length; i < len; i++) {
+            document.getElementById(sectorName[i].value + countTxt).innerText = counts[sectorName[i].value];
+        }
+        
     }
     
     function removeAllMarkers() {
@@ -126,23 +141,23 @@ App = (function () {
         on(document, 'click', function (e) {
             var target = e.target;
             
-            if (!target || target.type !== 'checkbox') {
+            if (!target || target.type !== 'checkbox') {  
                 return;
             }
-            
+            searchInput.value = '';
             updateFilter(target.name, target.value, !target.checked);
             
             filterMarkers(buildCriterias());
         });
         
-        //TODO: Free-text filterMarkers function
-        /*
+
         on(searchInput, 'keypress', function (e) {
             if (e.keyCode && e.keyCode === 13) {
-                filterMarkers(buildCriterias() + '&query=' + searchInput.value);
+                filterMarkers('&query=' + searchInput.value);
+                clearAllFilters();
             }
         });
-        */
+
     }
     
     function buildCriterias() {
@@ -167,6 +182,18 @@ App = (function () {
         );
     }
     
+    function clearAllFilters() {
+        var filters =  document.querySelectorAll('[type=checkbox]');
+        for (var i = 0 ; i < filters.length; i++) {
+            filters[i].checked = false;
+        }
+        
+        activeFilters = {
+            sectors: {},
+            installations: {}
+        };
+    }
+    
     return {
         init: function () {
             
@@ -180,7 +207,7 @@ App = (function () {
             
             filterMarkers('');
             
-            //searchInput = document.getElementById('filterMarkers-input');
+            searchInput = document.getElementById('search-input');
             
             installDOMListeners();
         }

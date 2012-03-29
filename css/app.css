@@ -52,7 +52,7 @@ td {
 }
 
 .td4 {
-	width: 350px;
+	width: 300px;
 }
 	
 	
@@ -89,4 +89,9 @@ td.space-hog {
 	margin-right: 5px;
     width: 100%;
     float:right;
+}
+
+#searchbar {
+    position: relative;
+    right: 30px;
 }
