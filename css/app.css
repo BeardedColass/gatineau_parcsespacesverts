@@ -92,3 +92,8 @@ td.space-hog {
     width: 100%;
     float:right;
 }
+
+#searchbar {
+    position: relative;
+    right: 30px;
+}
